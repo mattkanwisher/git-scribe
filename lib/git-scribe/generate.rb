@@ -61,7 +61,10 @@ class GitScribe
       strparams = {'callout.graphics' => 0,
                    'navig.graphics' => 0,
                    'admon.textlabel' => 1,
-                   'admon.graphics' => 0}
+                   'admon.graphics' => 0,
+                   'page.width' => '7.5in',
+                   'page.height' => '9in'
+      }
       param = strparams.map { |k, v| "--stringparam #{k} #{v}" }.join(' ')
       cmd = "xsltproc  --nonet #{param} --output #{local('book.fo')} #{base('docbook-xsl/fo.xsl')} #{local('book.xml')}"
       ex(cmd)
@@ -165,7 +168,7 @@ class GitScribe
       page_template = liquid_template('page.html')
 
       # write the index page
-      main_data = { 
+      main_data = {
         'book_title' => book_title,
         'sections' => sections
       }
@@ -175,7 +178,7 @@ class GitScribe
 
       # write the title page
       File.open('title.html', 'w+') do |f|
-        data = { 
+        data = {
           'title' => sections.first['title'],
           'sub' => sections.first['sub'],
           'prev' => {'link' => 'index.html', 'title' => "Main"},
@@ -204,7 +207,7 @@ class GitScribe
             if i <= sections.size
               next_section = sections[i+1]
             end
-            data = { 
+            data = {
               'title' => section['title'],
               'sub' => section['sub'],
               'prev' => sections[i-1],
@@ -241,7 +244,7 @@ class GitScribe
 
       source.scan(/\<h([2|3]) id=\"(.*?)\"\>(.*?)\<\/h[2|3]\>/).each do |header|
         sec = {'id' => header[1], 'name' => header[2]}
-        if header[0] == '2' 
+        if header[0] == '2'
           toc << {'section' => sec, 'subsections' => []}
         else
           toc[toc.size - 1]['subsections'] << sec
