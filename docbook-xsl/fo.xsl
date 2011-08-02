@@ -99,7 +99,7 @@
     <xsl:with-param name="master-reference">my-titlepage</xsl:with-param>
     <xsl:with-param name="content">
       <fo:block text-align="center">
-        <fo:external-graphic src="url(images/cover.png)" content-height="9in"/>
+        <fo:external-graphic src="url(images/cover.jpg)" content-height="9in"/>
       </fo:block>
     </xsl:with-param>
   </xsl:call-template>
