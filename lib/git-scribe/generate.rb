@@ -93,8 +93,9 @@ class GitScribe
       info "GENERATING HTML"
 
       # TODO: look for custom stylesheets
-      cmd = "#{a2x_wss('xhtml')} -a docinfo -v #{BOOK_FILE}"
-      return false if ex(cmd)
+      styledir = local('stylesheets')
+      cmd = "asciidoc -a stylesdir=#{styledir} -a theme=scribe #{BOOK_FILE}"
+      return false unless ex(cmd)
 
       @done['html'] = true
     end
