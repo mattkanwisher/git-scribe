@@ -129,6 +129,7 @@ class GitScribe
       File.open(file, 'w') do |f|
         f.write content.
           gsub(%r"<li(.*?)>\s*(.+?)\s*</li>"m, '<li\1>\2</li>').
+          gsub(%r"<li(.*?)>\s+(.+?)\s*</li>"m, '<li\1>\2</li>').
           gsub(%r'<h([123] class="title".*?)><a (id=".+?")[></a]+>'m, '<h\1 \2>')
       end
     end
