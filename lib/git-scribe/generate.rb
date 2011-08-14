@@ -118,12 +118,18 @@ class GitScribe
       @done['html'] = true
     end
 
+
+    def clean_epub_html
+      Dir.glob('book.epub.d/OEBPS/*.html').
+        each { |file| clean_html(file) }
+    end
+
     def clean_html(file)
       content = File.read(file)
       File.open(file, 'w') do |f|
         f.write content.
           gsub(%r"<li(.*?)>\s*(.+?)\s*</li>"m, '<li\1>\2</li>').
-          gsub(%r'<h([23] class="title".*?)><a (id=".+?")></a>'m, '<h\1 \2>')
+          gsub(%r'<h([123] class="title".*?)><a (id=".+?")[></a]+>'m, '<h\1 \2>')
       end
     end
 
@@ -275,6 +281,7 @@ class GitScribe
       add_epub_etype
       add_epub_toc
       flatten_ncx
+      clean_epub_html
       zip_epub_for_mobi
     end
 
