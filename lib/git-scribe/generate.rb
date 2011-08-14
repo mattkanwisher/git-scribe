@@ -78,7 +78,6 @@ class GitScribe
     end
 
     def do_epub
-      return true
       return true if @done['epub']
 
       info "GENERATING EPUB"
