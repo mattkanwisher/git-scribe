@@ -78,24 +78,32 @@ class GitScribe
     end
 
     def do_epub
+      return true
+      return true if @done['epub']
+
       info "GENERATING EPUB"
+
       generate_docinfo
       # TODO: look for custom stylesheets
-      cmd = "#{a2x_wss('epub')} -a docinfo -v #{BOOK_FILE}"
-      if ex(cmd)
-        'book.epub'
-      end
+      cmd = "#{a2x_wss('epub')} -a docinfo -k -v #{BOOK_FILE}"
+      return false unless ex(cmd)
+
+      @done['epub'] = true
     end
 
     def do_mobi
-      do_html
+      return true if @done['mobi']
+
+      do_epub
+
       info "GENERATING MOBI"
-      generate_toc_files
-      # generate book.opf
-      cmd = "kindlegen -verbose book.opf -o book.mobi"
-      if ex(cmd)
-        'book.mobi'
-      end
+
+      decorate_epub_for_mobi
+
+      cmd = "kindlegen -verbose book_for_mobi.epub -o book.mobi"
+      return false unless ex(cmd)
+
+      @done['mobi'] = true
     end
 
     def do_html
@@ -104,11 +112,10 @@ class GitScribe
 
       # TODO: look for custom stylesheets
       cmd = "#{a2x_wss('xhtml')} -a docinfo -v #{BOOK_FILE}"
-      if ex(cmd)
-        clean_html('book.html')
-        @done['html'] = true
-        'book.html'
-      end
+      return false if ex(cmd)
+
+      clean_html('book.html')
+      @done['html'] = true
     end
 
     def clean_html(file)
@@ -263,10 +270,98 @@ class GitScribe
       t ? t[1] : 'Title'
     end
 
+
+    def decorate_epub_for_mobi
+      add_epub_etype
+      add_epub_toc
+      zip_epub_for_mobi
+    end
+
+    def add_epub_etype
+      Dir.chdir('book.epub.d') do
+        FileUtils.cp 'mimetype', 'etype'
+      end
+    end
+
+    def add_epub_toc
+      build_html_toc
+      add_html_toc_to_opf
+    end
+
+    def build_html_toc
+      Dir.chdir('book.epub.d/OEBPS') do
+        ncx = File.read('toc.ncx')
+        titles = ncx.scan(%r{^          <ncx:text>(.+?)</ncx:text>}m).flatten
+        urls = ncx.scan(%r{^        <ncx:content src="(.+?)"/>}m).flatten
+
+        titles_and_urls = titles.zip(urls).reject { |entry|
+          entry[1].match(/^pr\d+.html$/) &&
+          !entry[0].match(/introduction/i)
+        }
+
+        File.open("toc.html", 'w') do |f|
+          f.puts('<?xml version="1.0" encoding="UTF-8"?>')
+          f.puts('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>Table of Contents</title></head><body>')
+          titles_and_urls.each do |entry|
+            f.puts <<_EOM
+<div>
+<span class="chapter">
+<a href="#{entry[1]}">#{entry[0]}</a>
+</span>
+</div>
+_EOM
+          end
+          f.puts('</body></html>')
+        end
+      end
+    end
+
+    def add_html_toc_to_opf
+      Dir.chdir('book.epub.d/OEBPS') do
+        opf = File.read('content.opf')
+        opf = add_html_toc_to_opf_manifest(opf)
+        opf = add_html_toc_to_opf_spine(opf)
+        opf = add_html_toc_to_opf_guide(opf)
+        File.open('content.opf', 'w') do |f|
+          f.puts opf
+        end
+      end
+    end
+
+    def add_html_toc_to_opf_manifest(opf)
+      opf.sub(/<item id="ncxtoc".+?>/) { |s|
+        s + "\n" +
+          %q|    <item id="htmltoc" | +
+                    %q|media-type="application/xhtml+xml" | +
+                    %q|href="toc.html"/>| }
+    end
+    def add_html_toc_to_opf_spine(opf)
+      opf.sub(/<itemref idref="cover".+?>/) { |s|
+        s + "\n" +
+          %q|    <itemref idref="htmltoc" linear="no"/>| }
+    end
+    def add_html_toc_to_opf_guide(opf)
+      opf.sub(/<\/guide>/) { |s|
+        "  " +
+        %q|<reference href="toc.html" type="toc" title="Table of Contents"/>| +
+        "\n  " +
+        s }
+    end
+
+
+    def zip_epub_for_mobi
+      Dir.chdir('book.epub.d') do
+        ex("zip ../book_for_mobi.epub . -r")
+      end
+    end
+
+
     def generate_toc_files
       extract_toc
       build_ncx
-      build_opf
+      add_ncx_to_opf
     end
 
 
@@ -318,19 +413,18 @@ class GitScribe
 </head>
 <docTitle><text>Title</text></docTitle>
 <docAuthor><text>Author</text></docAuthor>
-<navMap>
-<navPoint class="toc" id="toc" playOrder="1">
-<navLabel>
-<text>Table of Contents</text>
-</navLabel>
-<content src="toc.html"/>
-</navPoint>')
+<navMap>')
 
       chapters = 0
       toc.each do |section|
-        chapters += 1
         ch = section['section']
-        ncx.puts('<navPoint class="chapter" id="chapter_' + chapters.to_s + '" playOrder="' + (chapters + 1).to_s + '">')
+        next unless (chapters > 0 || ch['name'].to_s =~ /Introduction/i)
+
+        chapters += 1
+        ncx.puts('<navPoint class="chapter" id="' + ch['id'].to_s + '" playOrder="' + (chapters).to_s + '">')
+        # else
+        #   ncx.puts('<navPoint class="chapter">')
+        # end
         ncx.puts('<navLabel><text>' + ch['name'].to_s + '</text></navLabel>')
         ncx.puts('<content src="book.html#' + ch['id'].to_s + '"/>')
         ncx.puts('</navPoint>')
