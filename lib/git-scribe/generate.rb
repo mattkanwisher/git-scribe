@@ -274,6 +274,7 @@ class GitScribe
     def decorate_epub_for_mobi
       add_epub_etype
       add_epub_toc
+      flatten_ncx
       zip_epub_for_mobi
     end
 
@@ -350,6 +351,33 @@ _EOM
         s }
     end
 
+    def flatten_ncx
+      nav_points = ncx_nav_points.map { |x| x.gsub(/^\s+/, '') }
+
+      Dir.chdir('book.epub.d/OEBPS') do
+        ncx = File.read('toc.ncx')
+
+        File.open("toc.ncx", 'w') do |f|
+          f.write ncx.sub(
+            /<ncx:navMap>.+<\/ncx:navMap>/m,
+            "<ncx:navMap>\n#{nav_points.join("\n")}\n</ncx:navMap>"
+          )
+        end
+      end
+    end
+
+    def ncx_nav_points
+      nav_points = []
+
+      Dir.chdir('book.epub.d/OEBPS') do
+        nav_points = File.read('toc.ncx').
+          scan(%r{<ncx:navPoint.+?<ncx:content src=.+?/>}m)
+      end
+
+      nav_points.
+        flatten.
+        map { |x| x + "\n</ncx:navPoint>" }
+    end
 
     def zip_epub_for_mobi
       Dir.chdir('book.epub.d') do
