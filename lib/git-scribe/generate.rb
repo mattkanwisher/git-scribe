@@ -133,6 +133,17 @@ class GitScribe
       end
     end
 
+    def clean_epub_css
+      Dir.chdir('book.epub.d/OEBPS/stylesheets') do
+        content = File.read('scribe.css')
+        File.open('scribe.css', 'w') do |f|
+          f.write content.sub(/^pre[^}]+/m) { |s|
+            s + "  font-size: 8px;\n"
+          }
+        end
+      end
+    end
+
     def do_site
       info "GENERATING SITE"
       # TODO: check if html was already done
@@ -282,6 +293,7 @@ class GitScribe
       add_epub_toc
       flatten_ncx
       clean_epub_html
+      clean_epub_css
       zip_epub_for_mobi
     end
 
