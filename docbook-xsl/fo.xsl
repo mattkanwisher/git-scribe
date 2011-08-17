@@ -17,9 +17,9 @@
 <xsl:import href="common.xsl"/>
 
 <!-- Include source syntax highlighting -->
-<xsl:import href="http://docbook.sourceforge.net/release/xsl/current/highlighting/common.xsl"/>
+<xsl:import href="highlighting/common.xsl"/>
 <!-- This contains the default source highlight styling rules -->
-<xsl:import href="http://docbook.sourceforge.net/release/xsl/current/fo/highlight.xsl"/>
+<xsl:import href="fo/highlight.xsl"/>
 
 <xsl:param name="fop1.extensions" select="1" />
 <xsl:param name="variablelist.as.blocks" select="1" />
@@ -48,7 +48,35 @@
 <!-- Default fetches image from Internet (long timeouts) -->
 <xsl:param name="draft.watermark.image" select="''"/>
 
+<!-- Front cover -->
+<xsl:template name="front.cover">
+  <xsl:call-template name="page.sequence">
+    <xsl:with-param name="master-reference">my-titlepage</xsl:with-param>
+    <xsl:with-param name="content">
+      <fo:block text-align="center">
+        <fo:external-graphic src="url(images/cover.jpg)" content-height="9in"/>
+      </fo:block>
+    </xsl:with-param>
+  </xsl:call-template>
+</xsl:template>
 
+<xsl:template name="select.user.pagemaster">
+  <xsl:param name="element"/>
+  <xsl:param name="pageclass"/>
+  <xsl:param name="default-pagemaster"/>
+
+  <!-- Return my customized title page master name if for titlepage,
+       otherwise return the default -->
+
+  <xsl:choose>
+    <xsl:when test="$default-pagemaster = 'titlepage-first'">
+      <xsl:value-of select="'my-titlepage'" />
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:value-of select="$default-pagemaster"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
 
 <xsl:template name="user.pagemasters">
 
@@ -72,37 +100,6 @@
     </fo:region-body>
   </fo:simple-page-master>
 
-</xsl:template>
-
-
-<xsl:template name="select.user.pagemaster">
-  <xsl:param name="element"/>
-  <xsl:param name="pageclass"/>
-  <xsl:param name="default-pagemaster"/>
-
-  <!-- Return my customized title page master name if for titlepage,
-       otherwise return the default -->
-
-  <xsl:choose>
-    <xsl:when test="$default-pagemaster = 'titlepage-first'">
-      <xsl:value-of select="'my-titlepage'" />
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:value-of select="$default-pagemaster"/>
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
-
-<!-- Front cover -->
-<xsl:template name="front.cover">
-  <xsl:call-template name="page.sequence">
-    <xsl:with-param name="master-reference">my-titlepage</xsl:with-param>
-    <xsl:with-param name="content">
-      <fo:block text-align="center">
-        <fo:external-graphic src="url(images/cover.jpg)" content-height="9in"/>
-      </fo:block>
-    </xsl:with-param>
-  </xsl:call-template>
 </xsl:template>
 
 <!-- Line break -->
