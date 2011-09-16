@@ -16,10 +16,9 @@
 <xsl:import href="http://docbook.sourceforge.net/release/xsl/current/fo/docbook.xsl"/>
 <xsl:import href="common.xsl"/>
 
-<!-- Include source syntax highlighting -->
-<xsl:import href="highlighting/common.xsl"/>
-<!-- This contains the default source highlight styling rules -->
-<xsl:import href="fo/highlight.xsl"/>
+<xsl:import href="fo/verbatim.xsl"/>
+<xsl:param name="highlight.source" select="1"></xsl:param>
+<xsl:param name="highlight.xslthl.config">file:///usr/local/Cellar/docbook/5.0/docbook/xsl/1.76.1/highlighting/xslthl-config.xml</xsl:param>
 
 <xsl:param name="fop1.extensions" select="1" />
 <xsl:param name="variablelist.as.blocks" select="1" />

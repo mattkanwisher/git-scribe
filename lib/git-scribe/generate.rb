@@ -42,7 +42,7 @@ class GitScribe
 
       info "GENERATING PDF"
       do_docbook
-      # TODO: syntax highlighting (fop?)
+
       # TODO: start chapters on the recto page
       # (initial.page.number=auto-odd? break.before=page-even?)
       strparams = {'callout.graphics' => 0,
