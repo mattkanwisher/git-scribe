@@ -21,6 +21,10 @@
 <!-- This contains the default source highlight styling rules -->
 <xsl:import href="fo/highlight.xsl"/>
 
+<xsl:attribute-set name="monospace.verbatim.properties">
+  <xsl:attribute name="keep-together.within-column">always</xsl:attribute>
+</xsl:attribute-set>
+
 <xsl:param name="fop1.extensions" select="1" />
 <xsl:param name="variablelist.as.blocks" select="1" />
 
