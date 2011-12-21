@@ -51,8 +51,25 @@ class GitScribe
                    'admon.graphics' => 0,
                    'page.width' => '7.5in',
                    'page.height' => '9in'}
-      param = strparams.map { |k, v| "--stringparam #{k} #{v}" }.join(' ')
-      cmd = "xsltproc  --nonet #{param} --output #{local('book.fo')} #{base('docbook-xsl/fo.xsl')} #{local('book.xml')}"
+      # param = strparams.map { |k, v| "--stringparam #{k} #{v}" }.join(' ')
+      # cmd = "xsltproc  --nonet #{param} --output #{local('book.fo')} #{base('docbook-xsl/fo.xsl')} #{local('book.xml')}"
+      # ex(cmd)
+      # cmd = "fop -fo #{local('book.fo')} -pdf #{local('book.pdf')}"
+      # ex(cmd)
+
+
+
+
+      params = strparams.map { |k, v| "-D#{k}=#{v}" }.join(' ')
+
+      cmd = <<-SH
+        java -cp "#{base('vendor/saxon.jar')}:#{base('vendor/xslthl-2.0.2.jar')}" \
+             #{params} \
+             com.icl.saxon.StyleSheet \
+             -o #{local('book.fo')} \
+             #{local('book.xml')} #{base('docbook-xsl/fo.xsl')}
+      SH
+
       ex(cmd)
       cmd = "fop -fo #{local('book.fo')} -pdf #{local('book.pdf')}"
       ex(cmd)
