@@ -1,5 +1,5 @@
 This Fork
-=========
+---------
 
 This fork is used to maintain my ebooks: http://spdybook.com,
 http://recipeswithbackbone.com, and http://dartforhipsters.com. It
@@ -14,10 +14,10 @@ such, there will never be an official ruby gem. If you really, really
 want this, clone the repository and install with:
 
 [source,bash]
-=====
+------------------------------------
 gem build git-scribe.gemspec
 gem install git-scribe-0.0.9.gem
-=====
+------------------------------------
 
 Git Scribe
 ==========
