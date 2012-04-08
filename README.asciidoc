@@ -13,11 +13,8 @@ Unless you absolutely need my features, you should use upstream. As
 such, there will never be an official ruby gem. If you really, really
 want this, clone the repository and install with:
 
-[source]
-==================================
-gem build git-scribe.gemspec
-gem install git-scribe-0.0.9.gem
-==================================
+    gem build git-scribe.gemspec
+    gem install git-scribe-0.0.9.gem
 
 
 Git Scribe
