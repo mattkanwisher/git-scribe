@@ -1,3 +1,24 @@
+This Fork
+=========
+
+This fork is used to maintain my ebooks: http://spdybook.com,
+http://recipeswithbackbone.com, and http://dartforhipsters.com. It
+adds some features (page resizing, formatting tweaks, Kindle Fire
+compatibility, ebook zip). Most features could (and will) eventually
+appear in the upstream, but some, particularly page sizing are
+incompatible with the saxon-based upstream (this fork remains tied to
+xsltproc).
+
+Unless you absolutely need my features, you should use upstream. As
+such, there will never be an official ruby gem. If you really, really
+want this, clone the repository and install with:
+
+[source,bash]
+=====
+gem build git-scribe.gemspec
+gem install git-scribe-0.0.9.gem
+=====
+
 Git Scribe
 ==========
 
@@ -85,5 +106,3 @@ Contributing
 If you want to hack on this, fork it, improve it and send me a pull request.
 
 To get started using it, just clone it and call the ./bin/git-scribe script directly from either the `example` subdir or your own book directory.  If you add a feature, make sure it's included in the example subdirectory so I can test it out.
-
-
