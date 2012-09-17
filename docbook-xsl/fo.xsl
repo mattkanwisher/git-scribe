@@ -24,7 +24,7 @@
 <xsl:import href="fo/highlight.xsl"/>
 
 <xsl:attribute-set name="monospace.verbatim.properties">
-  <xsl:attribute name="keep-together.within-column">always</xsl:attribute>
+  <xsl:attribute name="keep-together.within-column">auto</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:param name="fop1.extensions" select="1" />
