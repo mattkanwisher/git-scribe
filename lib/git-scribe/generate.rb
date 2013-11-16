@@ -326,7 +326,10 @@ _EOM
     end
 
     def zip_ebook
-      file_name = book_title.downcase.gsub(/\s+/, '_')
+      file_name = book_title.
+        downcase.
+        gsub(/[\s]+/, '_').
+        gsub(/[^A-Za-z0-9_]/, '')
 
       Dir.mkdir(file_name) rescue nil
       FileUtils.cp 'book.pdf', "#{file_name}/#{file_name}.pdf"
