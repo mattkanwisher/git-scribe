@@ -140,7 +140,7 @@ class GitScribe
     private
     def prepare_output_dir(dir='output')
       FileUtils.mkdir_p(dir)
-      FileUtils.cp_r "#{@wd}/book/.", dir, :remove_destination => true
+      cp_book_files(dir)
 
       FileUtils.mkdir_p("#{dir}/stylesheets")
       FileUtils.cp_r File.join(SCRIBE_ROOT, 'stylesheets'), dir
@@ -148,6 +148,27 @@ class GitScribe
       FileUtils.mkdir_p("#{dir}/images/icons")
       FileUtils.cp_r File.join(SCRIBE_ROOT, 'icons'),
                      "#{dir}/images"
+    end
+
+    def cp_book_files(outdir)
+      files = `git ls book`.split
+
+      # Make directory structure
+      files.
+        map{|f| f.split('/')[1..-2].join('/') }.
+        reject{|f| f==""}.
+        uniq.
+        each do |d|
+          FileUtils.mkdir_p("#{outdir}/#{d}")
+        end
+
+      files.
+        map{|f| f.split('/')[1..-1].join('/') }.
+        each do |f|
+          if !File.symlink? "#{@wd}/book/#{f}"
+            FileUtils.cp "#{@wd}/book/#{f}", "#{outdir}/#{f}"
+          end
+        end
     end
 
     def clean_up
