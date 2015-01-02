@@ -158,16 +158,21 @@ class GitScribe
         map{|f| f.split('/')[1..-2].join('/') }.
         reject{|f| f==""}.
         uniq.
+        sort.
+        reverse.
         each do |d|
           FileUtils.mkdir_p("#{outdir}/#{d}")
+          @remove_when_done << d
         end
 
       # Copy non-symlink git-controlled files
       files.
         map{|f| f.split('/')[1..-1].join('/') }.
         each do |f|
-          if !File.symlink? "#{@wd}/book/#{f}"
-            FileUtils.cp "#{@wd}/book/#{f}", "#{outdir}/#{f}"
+          src = "#{@wd}/book/#{f}"
+          dest = "#{outdir}/#{f}"
+          unless File.symlink?(src) && File.directory?(src)
+            FileUtils.cp src, dest
           end
         end
 
