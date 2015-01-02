@@ -162,6 +162,7 @@ class GitScribe
           FileUtils.mkdir_p("#{outdir}/#{d}")
         end
 
+      # Copy non-symlink git-controlled files
       files.
         map{|f| f.split('/')[1..-1].join('/') }.
         each do |f|
@@ -169,6 +170,9 @@ class GitScribe
             FileUtils.cp "#{@wd}/book/#{f}", "#{outdir}/#{f}"
           end
         end
+
+      # In case book.asc is a symlink
+      FileUtils.cp "#{@wd}/book/book.asc", "#{outdir}/book.asc"
     end
 
     def clean_up
