@@ -151,7 +151,7 @@ class GitScribe
     end
 
     def cp_book_files(outdir)
-      files = `git ls book`.split
+      files = `git ls-files book`.split
 
       # Make directory structure
       files.
