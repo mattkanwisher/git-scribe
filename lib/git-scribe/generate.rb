@@ -56,8 +56,8 @@ class GitScribe
         'page.height' => '9in',
         'body.font.family' => "'URW Bookman L Light'",
         'title.font.family' => "'URW Bookman L Demi Bold'",
-        # 'monospace.font.family' => "'LiberationMono'"
-        'monospace.font.family' => "'Droid Sans Mono'"
+        'monospace.font.family' => "'LiberationMono'"
+        # 'monospace.font.family' => "'Droid Sans Mono'"
       }
       param = strparams.map { |k, v| "--stringparam #{k} #{v}" }.join(' ')
       cmd = "xsltproc  --nonet #{param} --output #{local('book.fo')} #{base('docbook-xsl/fo.xsl')} #{local('book.xml')}"
