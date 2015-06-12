@@ -1,47 +1,19 @@
 <fop version="1.0">
-  <fonts>
-    <substitutions>
-      <substitution>
-        <from font-family="URW Bookman L Light" font-weight="700"/>
-        <to font-family="URW Bookman L Light" font-weight="400"/>
-      </substitution>
-      <substitution>
-        <from font-family="URW Bookman L Demi Bold" font-weight="700"/>
-        <to font-family="URW Bookman L Demi Bold" font-weight="400"/>
-      </substitution>
-      <substitution>
-        <from font-family="Symbol" font-weight="700"/>
-        <to font-family="Symbol" font-weight="400"/>
-      </substitution>
-      <substitution>
-        <from font-family="ZapfDingbats" font-weight="700"/>
-        <to font-family="ZapfDingbats" font-weight="400"/>
-      </substitution>
-    </substitutions>
-  </fonts>
   <renderers>
     <renderer mime="application/pdf">
       <fonts>
 
-        <font kerning="yes"
-              embed-url="/usr/share/fonts/truetype/liberation/LiberationMono-Italic.ttf">
-          <font-triplet name="LiberationMono" style="italic" weight="normal"/>
-        </font>
+<font kerning="yes" embed-url="/usr/share/fonts/truetype/liberation/LiberationMono-Italic.ttf">
+    <font-triplet name="LiberationMono" style="italic" weight="normal"/>
+</font>
 
-        <font kerning="yes"
-              embed-url="/usr/share/fonts/truetype/liberation/LiberationMono-Bold.ttf">
-          <font-triplet name="LiberationMono" style="normal" weight="bold"/>
-        </font>
+<font kerning="yes" embed-url="/usr/share/fonts/truetype/liberation/LiberationMono-Bold.ttf">
+    <font-triplet name="LiberationMono" style="normal" weight="bold"/>
+</font>
 
-        <font kerning="yes"
-              embed-url="/usr/share/fonts/truetype/liberation/LiberationMono-BoldItalic.ttf">
-          <font-triplet name="LiberationMono" style="italic" weight="bold"/>
-        </font>
-
-        <font kerning="yes"
-              embed-url="/usr/share/fonts/type1/texlive-fonts-recommended/ubkli8a.pfb">
-          <font-triplet name="URW Bookman L Light" style="italic" weight="normal"/>
-        </font>
+<font kerning="yes" embed-url="/usr/share/fonts/truetype/liberation/LiberationMono-BoldItalic.ttf">
+    <font-triplet name="LiberationMono" style="italic" weight="bold"/>
+</font>
 
         <auto-detect/>
       </fonts>
