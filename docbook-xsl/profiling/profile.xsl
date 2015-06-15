@@ -18,7 +18,7 @@
 <!--
 <xsl:output method="xml" 
             doctype-public="-//OASIS//DTD DocBook XML V4.5//EN"
-            doctype-system="http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"/>
+            doctype-system="docbookx.dtd"/>
 -->
 
 <!-- Profiling parameters -->
